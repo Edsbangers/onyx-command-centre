@@ -261,13 +261,71 @@ const riskAssessments = [
   { task: "Outdoor Service - Pontoons", riskLevel: "high", lastReview: "01/09/2025", status: "current" },
 ];
 
+// Live Transaction Simulation Data
+const transactionItems = [
+  { item: "Champagne Bottle", zone: "VIP Lounge", terminal: "VIP-01", price: 125.00 },
+  { item: "Fish & Chips x2", zone: "Shipyard Deck", terminal: "SY-03", price: 32.00 },
+  { item: "Seafood Platter", zone: "Waterside Bar", terminal: "WS-02", price: 45.00 },
+  { item: "Pimm's Pitcher", zone: "VIP Lounge", terminal: "VIP-02", price: 28.00 },
+  { item: "Coffee & Pastries", zone: "Waterside Bar", terminal: "WS-01", price: 12.50 },
+  { item: "Oysters (6)", zone: "VIP Lounge", terminal: "VIP-01", price: 38.00 },
+  { item: "Burger & Fries", zone: "Shipyard Deck", terminal: "SY-01", price: 16.00 },
+  { item: "Ice Cream Sundae", zone: "Waterside Bar", terminal: "WS-03", price: 8.50 },
+  { item: "Moët & Chandon", zone: "VIP Lounge", terminal: "VIP-03", price: 95.00 },
+  { item: "Afternoon Tea", zone: "VIP Lounge", terminal: "VIP-02", price: 42.00 },
+  { item: "Beer Flight x4", zone: "Shipyard Deck", terminal: "SY-02", price: 24.00 },
+  { item: "Lobster Roll", zone: "Waterside Bar", terminal: "WS-02", price: 28.00 },
+  { item: "Espresso Martini x2", zone: "VIP Lounge", terminal: "VIP-01", price: 26.00 },
+  { item: "Crab Linguine", zone: "Waterside Bar", terminal: "WS-01", price: 22.00 },
+  { item: "Prosecco Bottle", zone: "Shipyard Deck", terminal: "SY-03", price: 38.00 },
+];
+
+const cardTypes = ["Visa", "Mastercard", "Amex", "Apple Pay", "Google Pay"];
+
+interface Transaction {
+  id: string;
+  item: string;
+  zone: string;
+  terminal: string;
+  price: number;
+  cardType: string;
+  cardLast4: string;
+  timestamp: Date;
+}
+
 export default function Dashboard() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [feedItems, setFeedItems] = useState(agentFeedItems);
+  const [liveRevenue, setLiveRevenue] = useState(47832);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [transactionCount, setTransactionCount] = useState(1247);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
+  }, []);
+
+  // Simulate live card transactions
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const randomTx = transactionItems[Math.floor(Math.random() * transactionItems.length)];
+      const cardType = cardTypes[Math.floor(Math.random() * cardTypes.length)];
+      const cardLast4 = Math.floor(1000 + Math.random() * 9000).toString();
+
+      const newTransaction: Transaction = {
+        id: `TXN-${Date.now()}`,
+        ...randomTx,
+        cardType,
+        cardLast4,
+        timestamp: new Date(),
+      };
+
+      setTransactions((prev) => [newTransaction, ...prev.slice(0, 9)]);
+      setLiveRevenue((prev) => prev + randomTx.price);
+      setTransactionCount((prev) => prev + 1);
+    }, 2500);
+
+    return () => clearInterval(interval);
   }, []);
 
   // Simulate live feed updates
@@ -355,10 +413,49 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="max-w-[1800px] mx-auto px-6 py-6">
+        {/* Live API Status Banner */}
+        <div className="mb-6 p-3 rounded-lg border border-green-500/30 bg-green-500/10 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              <span className="text-green-400 font-semibold text-sm">LIVE API SIMULATION</span>
+            </div>
+            <Separator orientation="vertical" className="h-4" />
+            <span className="text-sm text-muted-foreground">
+              Connected to {transactionCount.toLocaleString()} card terminals across 3 zones
+            </span>
+          </div>
+          <div className="flex items-center gap-4 text-sm">
+            <div className="flex items-center gap-2">
+              <CreditCard className="w-4 h-4 text-green-400" />
+              <span className="text-muted-foreground">Transactions today:</span>
+              <span className="font-mono text-green-400">{transactionCount.toLocaleString()}</span>
+            </div>
+          </div>
+        </div>
+
         {/* Quick Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
+          {/* Live Revenue Card - Special styling */}
+          <Card className="bg-card border-border border-l-4 border-l-green-500 relative overflow-hidden">
+            <div className="absolute top-2 right-2">
+              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+            </div>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-2">
+                <TrendingUp className="w-4 h-4 text-green-400" />
+                <Badge variant="outline" className="text-green-400 border-green-400/30">
+                  +12%
+                </Badge>
+              </div>
+              <div className="text-2xl font-bold font-mono text-green-400">
+                £{liveRevenue.toLocaleString("en-GB", { minimumFractionDigits: 0 })}
+              </div>
+              <div className="text-xs text-muted-foreground">Today&apos;s Revenue (Live)</div>
+            </CardContent>
+          </Card>
+
           {[
-            { label: "Today's Revenue", value: "£47,832", change: "+12%", up: true, icon: TrendingUp },
             { label: "Active Staff", value: "127/134", change: "95%", up: true, icon: Users },
             { label: "Food Waste", value: "3.2%", change: "-1.8%", up: false, icon: Leaf },
             { label: "Hygiene Score", value: "96%", change: "+2%", up: true, icon: Shield },
@@ -382,6 +479,102 @@ export default function Dashboard() {
             </Card>
           ))}
         </div>
+
+        {/* Live Transaction Feed */}
+        <Card className="bg-card border-border border-l-4 border-l-green-500 mb-6">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <CreditCard className="w-5 h-5 text-green-400" />
+                Live Sales Feed
+                <Badge className="bg-green-500/20 text-green-400 border-green-500/30 ml-2 animate-pulse">
+                  LIVE
+                </Badge>
+              </CardTitle>
+              <div className="text-sm text-muted-foreground">
+                Card machine data streaming in real-time
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {transactions.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <CreditCard className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                  <p>Waiting for transactions...</p>
+                </div>
+              ) : (
+                <div className="grid gap-2">
+                  {transactions.slice(0, 6).map((tx, index) => (
+                    <div
+                      key={tx.id}
+                      className={`flex items-center justify-between p-3 rounded-lg border transition-all ${
+                        index === 0
+                          ? "border-green-500/50 bg-green-500/10 animate-fade-in"
+                          : "border-border bg-secondary/30"
+                      }`}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className={`p-2 rounded-lg ${
+                          tx.zone === "VIP Lounge"
+                            ? "bg-[#c9a962]/20"
+                            : tx.zone === "Shipyard Deck"
+                            ? "bg-[#0ea5e9]/20"
+                            : "bg-[#22c55e]/20"
+                        }`}>
+                          <CreditCard className={`w-4 h-4 ${
+                            tx.zone === "VIP Lounge"
+                              ? "text-[#c9a962]"
+                              : tx.zone === "Shipyard Deck"
+                              ? "text-[#0ea5e9]"
+                              : "text-[#22c55e]"
+                          }`} />
+                        </div>
+                        <div>
+                          <div className="font-medium text-sm">{tx.item}</div>
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <span>{tx.zone}</span>
+                            <span>•</span>
+                            <span>Terminal {tx.terminal}</span>
+                            <span>•</span>
+                            <span>{tx.cardType} ****{tx.cardLast4}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className={`font-mono font-bold ${index === 0 ? "text-green-400" : ""}`}>
+                          £{tx.price.toFixed(2)}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {index === 0 ? "Just now" : `${(index * 2.5).toFixed(0)}s ago`}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
+              <div className="flex items-center gap-6 text-sm">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-[#c9a962]" />
+                  <span className="text-muted-foreground">VIP Lounge</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-[#0ea5e9]" />
+                  <span className="text-muted-foreground">Shipyard Deck</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-[#22c55e]" />
+                  <span className="text-muted-foreground">Waterside Bar</span>
+                </div>
+              </div>
+              <Button variant="outline" size="sm">
+                View All Transactions
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Main Grid */}
         <div className="grid lg:grid-cols-3 gap-6">
