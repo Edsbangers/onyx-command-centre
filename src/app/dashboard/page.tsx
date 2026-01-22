@@ -40,6 +40,20 @@ import {
   Bell,
   Settings,
   Activity,
+  HardHat,
+  Flame,
+  Zap,
+  Eye,
+  FileWarning,
+  ClipboardCheck,
+  UserCheck,
+  AlertOctagon,
+  CircleAlert,
+  BadgeCheck,
+  Camera,
+  MessageSquareWarning,
+  ShieldAlert,
+  Siren,
 } from "lucide-react";
 import {
   AreaChart,
@@ -168,6 +182,83 @@ const qrOrders = [
   { id: "VIP-002", table: "Gold 7", items: ["Afternoon Tea", "Prosecco"], status: "ready", time: "Ready" },
   { id: "VIP-003", table: "Platinum 1", items: ["Oysters (12)", "Chablis"], status: "delivered", time: "Delivered" },
   { id: "VIP-004", table: "Gold 2", items: ["Coffee Service", "Petit Fours"], status: "preparing", time: "5 mins" },
+];
+
+// SHEQ Hazard Reports
+const hazardReports = [
+  {
+    id: "HAZ-001",
+    type: "critical",
+    category: "Slip Hazard",
+    location: "Waterside Bar - Entrance",
+    reporter: "Sarah M.",
+    time: "3 mins ago",
+    status: "responding",
+    description: "Spillage near entrance causing slip risk",
+    icon: AlertOctagon,
+  },
+  {
+    id: "HAZ-002",
+    type: "warning",
+    category: "Equipment",
+    location: "Main Kitchen - Station 2",
+    reporter: "James T.",
+    time: "12 mins ago",
+    status: "investigating",
+    description: "Fryer temperature gauge showing erratic readings",
+    icon: Flame,
+  },
+  {
+    id: "HAZ-003",
+    type: "info",
+    category: "Near Miss",
+    location: "Loading Bay",
+    reporter: "Tom B.",
+    time: "25 mins ago",
+    status: "logged",
+    description: "Forklift near-miss with pedestrian - CCTV captured",
+    icon: Eye,
+  },
+  {
+    id: "HAZ-004",
+    type: "resolved",
+    category: "Electrical",
+    location: "VIP Lounge - Bar Area",
+    reporter: "David P.",
+    time: "1 hour ago",
+    status: "resolved",
+    description: "Exposed cable under bar - taped and reported to maintenance",
+    icon: Zap,
+  },
+];
+
+// SHEQ Compliance Checks
+const complianceChecks = [
+  { area: "Fire Exits Clear", status: "passed", lastCheck: "09:15", nextDue: "13:15", checker: "Mike S." },
+  { area: "First Aid Kits", status: "passed", lastCheck: "08:00", nextDue: "20:00", checker: "Lisa K." },
+  { area: "PPE Availability", status: "warning", lastCheck: "10:30", nextDue: "14:30", checker: "Amy C." },
+  { area: "Spill Kits Stocked", status: "passed", lastCheck: "08:30", nextDue: "16:30", checker: "Tom B." },
+  { area: "COSHH Storage", status: "passed", lastCheck: "07:00", nextDue: "19:00", checker: "James T." },
+];
+
+// SHEQ Incident Statistics
+const incidentStats = [
+  { period: "Mon", hazards: 3, nearMisses: 1, incidents: 0 },
+  { period: "Tue", hazards: 5, nearMisses: 2, incidents: 0 },
+  { period: "Wed", hazards: 2, nearMisses: 0, incidents: 1 },
+  { period: "Thu", hazards: 4, nearMisses: 1, incidents: 0 },
+  { period: "Fri", hazards: 6, nearMisses: 3, incidents: 0 },
+  { period: "Sat", hazards: 8, nearMisses: 2, incidents: 0 },
+  { period: "Today", hazards: 4, nearMisses: 1, incidents: 0 },
+];
+
+// Risk Assessment Status
+const riskAssessments = [
+  { task: "Hot Food Service", riskLevel: "medium", lastReview: "01/09/2025", status: "current" },
+  { task: "Glass Collection", riskLevel: "high", lastReview: "15/08/2025", status: "current" },
+  { task: "Manual Handling - Kegs", riskLevel: "high", lastReview: "20/08/2025", status: "current" },
+  { task: "Chemical Cleaning", riskLevel: "medium", lastReview: "25/07/2025", status: "review-due" },
+  { task: "Outdoor Service - Pontoons", riskLevel: "high", lastReview: "01/09/2025", status: "current" },
 ];
 
 export default function Dashboard() {
@@ -783,6 +874,451 @@ export default function Dashboard() {
                           </li>
                         ))}
                       </ul>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* SHEQ Safety & Compliance Module */}
+        <div className="mt-6">
+          <Card className="bg-card border-border border-l-4 border-l-red-500">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <ShieldAlert className="w-5 h-5 text-red-500" />
+                    Safety & Compliance Module
+                    <Badge className="bg-red-500/20 text-red-400 border-red-500/30 ml-2">
+                      SHEQ Manager View
+                    </Badge>
+                  </CardTitle>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Real-time hazard reporting, incident tracking, and compliance monitoring
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" size="sm" className="border-red-500/30 text-red-400 hover:bg-red-500/10">
+                    <Siren className="w-4 h-4 mr-2" />
+                    Emergency Protocol
+                  </Button>
+                  <Button size="sm" className="bg-red-500 hover:bg-red-600 text-white">
+                    <MessageSquareWarning className="w-4 h-4 mr-2" />
+                    Report Hazard
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Tabs defaultValue="hazards" className="w-full">
+                <TabsList className="grid w-full grid-cols-4 mb-6">
+                  <TabsTrigger value="hazards" className="flex items-center gap-2">
+                    <AlertOctagon className="w-4 h-4" />
+                    Live Hazards
+                  </TabsTrigger>
+                  <TabsTrigger value="compliance" className="flex items-center gap-2">
+                    <ClipboardCheck className="w-4 h-4" />
+                    Compliance Checks
+                  </TabsTrigger>
+                  <TabsTrigger value="incidents" className="flex items-center gap-2">
+                    <FileWarning className="w-4 h-4" />
+                    Incident Tracker
+                  </TabsTrigger>
+                  <TabsTrigger value="risk" className="flex items-center gap-2">
+                    <HardHat className="w-4 h-4" />
+                    Risk Assessments
+                  </TabsTrigger>
+                </TabsList>
+
+                {/* Live Hazards Tab */}
+                <TabsContent value="hazards" className="space-y-4">
+                  <div className="grid md:grid-cols-4 gap-4 mb-6">
+                    <Card className="bg-red-500/10 border-red-500/30">
+                      <CardContent className="p-4 text-center">
+                        <AlertOctagon className="w-8 h-8 mx-auto mb-2 text-red-400" />
+                        <div className="text-2xl font-bold text-red-400">1</div>
+                        <div className="text-xs text-muted-foreground">Critical Hazards</div>
+                      </CardContent>
+                    </Card>
+                    <Card className="bg-amber-500/10 border-amber-500/30">
+                      <CardContent className="p-4 text-center">
+                        <CircleAlert className="w-8 h-8 mx-auto mb-2 text-amber-400" />
+                        <div className="text-2xl font-bold text-amber-400">2</div>
+                        <div className="text-xs text-muted-foreground">Active Warnings</div>
+                      </CardContent>
+                    </Card>
+                    <Card className="bg-green-500/10 border-green-500/30">
+                      <CardContent className="p-4 text-center">
+                        <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-green-400" />
+                        <div className="text-2xl font-bold text-green-400">12</div>
+                        <div className="text-xs text-muted-foreground">Resolved Today</div>
+                      </CardContent>
+                    </Card>
+                    <Card className="bg-blue-500/10 border-blue-500/30">
+                      <CardContent className="p-4 text-center">
+                        <Clock className="w-8 h-8 mx-auto mb-2 text-blue-400" />
+                        <div className="text-2xl font-bold text-blue-400">8 min</div>
+                        <div className="text-xs text-muted-foreground">Avg Response Time</div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <div className="space-y-3">
+                    {hazardReports.map((hazard) => (
+                      <Card
+                        key={hazard.id}
+                        className={`border-l-4 ${
+                          hazard.type === "critical"
+                            ? "border-l-red-500 bg-red-500/5"
+                            : hazard.type === "warning"
+                            ? "border-l-amber-500 bg-amber-500/5"
+                            : hazard.type === "resolved"
+                            ? "border-l-green-500 bg-green-500/5"
+                            : "border-l-blue-500 bg-blue-500/5"
+                        }`}
+                      >
+                        <CardContent className="p-4">
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-start gap-3">
+                              <div
+                                className={`p-2 rounded-lg ${
+                                  hazard.type === "critical"
+                                    ? "bg-red-500/20"
+                                    : hazard.type === "warning"
+                                    ? "bg-amber-500/20"
+                                    : hazard.type === "resolved"
+                                    ? "bg-green-500/20"
+                                    : "bg-blue-500/20"
+                                }`}
+                              >
+                                <hazard.icon
+                                  className={`w-5 h-5 ${
+                                    hazard.type === "critical"
+                                      ? "text-red-400"
+                                      : hazard.type === "warning"
+                                      ? "text-amber-400"
+                                      : hazard.type === "resolved"
+                                      ? "text-green-400"
+                                      : "text-blue-400"
+                                  }`}
+                                />
+                              </div>
+                              <div>
+                                <div className="flex items-center gap-2 mb-1">
+                                  <span className="font-semibold">{hazard.category}</span>
+                                  <Badge variant="outline" className="text-xs">
+                                    {hazard.id}
+                                  </Badge>
+                                  <Badge
+                                    className={
+                                      hazard.status === "responding"
+                                        ? "bg-red-500/20 text-red-400 border-red-500/30"
+                                        : hazard.status === "investigating"
+                                        ? "bg-amber-500/20 text-amber-400 border-amber-500/30"
+                                        : hazard.status === "resolved"
+                                        ? "bg-green-500/20 text-green-400 border-green-500/30"
+                                        : "bg-blue-500/20 text-blue-400 border-blue-500/30"
+                                    }
+                                  >
+                                    {hazard.status}
+                                  </Badge>
+                                </div>
+                                <p className="text-sm text-muted-foreground mb-2">{hazard.description}</p>
+                                <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                                  <span className="flex items-center gap-1">
+                                    <MapPin className="w-3 h-3" />
+                                    {hazard.location}
+                                  </span>
+                                  <span className="flex items-center gap-1">
+                                    <UserCheck className="w-3 h-3" />
+                                    {hazard.reporter}
+                                  </span>
+                                  <span className="flex items-center gap-1">
+                                    <Clock className="w-3 h-3" />
+                                    {hazard.time}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex gap-2">
+                              <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <Camera className="w-4 h-4" />
+                              </Button>
+                              <Button variant="ghost" size="icon" className="h-8 w-8">
+                                <Eye className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </TabsContent>
+
+                {/* Compliance Checks Tab */}
+                <TabsContent value="compliance" className="space-y-4">
+                  <div className="grid md:grid-cols-3 gap-4 mb-6">
+                    <Card className="bg-green-500/10 border-green-500/30">
+                      <CardContent className="p-4 text-center">
+                        <BadgeCheck className="w-8 h-8 mx-auto mb-2 text-green-400" />
+                        <div className="text-2xl font-bold text-green-400">94%</div>
+                        <div className="text-xs text-muted-foreground">Overall Compliance</div>
+                      </CardContent>
+                    </Card>
+                    <Card className="bg-blue-500/10 border-blue-500/30">
+                      <CardContent className="p-4 text-center">
+                        <ClipboardCheck className="w-8 h-8 mx-auto mb-2 text-blue-400" />
+                        <div className="text-2xl font-bold text-blue-400">47</div>
+                        <div className="text-xs text-muted-foreground">Checks Completed Today</div>
+                      </CardContent>
+                    </Card>
+                    <Card className="bg-amber-500/10 border-amber-500/30">
+                      <CardContent className="p-4 text-center">
+                        <Clock className="w-8 h-8 mx-auto mb-2 text-amber-400" />
+                        <div className="text-2xl font-bold text-amber-400">3</div>
+                        <div className="text-xs text-muted-foreground">Checks Due Soon</div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <Card className="bg-secondary/30 border-border">
+                    <CardContent className="p-0">
+                      <div className="overflow-x-auto">
+                        <table className="w-full">
+                          <thead>
+                            <tr className="border-b border-border">
+                              <th className="text-left p-4 text-sm font-medium text-muted-foreground">Check Area</th>
+                              <th className="text-left p-4 text-sm font-medium text-muted-foreground">Status</th>
+                              <th className="text-left p-4 text-sm font-medium text-muted-foreground">Last Check</th>
+                              <th className="text-left p-4 text-sm font-medium text-muted-foreground">Next Due</th>
+                              <th className="text-left p-4 text-sm font-medium text-muted-foreground">Checker</th>
+                              <th className="text-left p-4 text-sm font-medium text-muted-foreground">Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {complianceChecks.map((check, i) => (
+                              <tr key={i} className="border-b border-border/50 hover:bg-secondary/20">
+                                <td className="p-4 font-medium">{check.area}</td>
+                                <td className="p-4">
+                                  <Badge
+                                    className={
+                                      check.status === "passed"
+                                        ? "bg-green-500/20 text-green-400 border-green-500/30"
+                                        : "bg-amber-500/20 text-amber-400 border-amber-500/30"
+                                    }
+                                  >
+                                    {check.status === "passed" ? "Passed" : "Attention"}
+                                  </Badge>
+                                </td>
+                                <td className="p-4 text-muted-foreground">{check.lastCheck}</td>
+                                <td className="p-4 text-muted-foreground">{check.nextDue}</td>
+                                <td className="p-4 text-muted-foreground">{check.checker}</td>
+                                <td className="p-4">
+                                  <Button variant="ghost" size="sm">
+                                    Run Check
+                                  </Button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                {/* Incident Tracker Tab */}
+                <TabsContent value="incidents" className="space-y-4">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <Card className="bg-secondary/30 border-border">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-base">Weekly Incident Overview</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="h-[250px]">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={incidentStats}>
+                              <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                              <XAxis dataKey="period" stroke="#666" fontSize={12} />
+                              <YAxis stroke="#666" fontSize={12} />
+                              <Tooltip
+                                contentStyle={{ backgroundColor: "#12121a", border: "1px solid #333" }}
+                                labelStyle={{ color: "#fff" }}
+                              />
+                              <Bar dataKey="hazards" fill="#f59e0b" name="Hazards Reported" radius={[4, 4, 0, 0]} />
+                              <Bar dataKey="nearMisses" fill="#3b82f6" name="Near Misses" radius={[4, 4, 0, 0]} />
+                              <Bar dataKey="incidents" fill="#ef4444" name="Incidents" radius={[4, 4, 0, 0]} />
+                            </BarChart>
+                          </ResponsiveContainer>
+                        </div>
+                        <div className="flex justify-center gap-6 mt-4">
+                          {[
+                            { label: "Hazards", colour: "#f59e0b" },
+                            { label: "Near Misses", colour: "#3b82f6" },
+                            { label: "Incidents", colour: "#ef4444" },
+                          ].map((item, i) => (
+                            <div key={i} className="flex items-center gap-2 text-xs">
+                              <div className="w-3 h-3 rounded" style={{ backgroundColor: item.colour }} />
+                              <span className="text-muted-foreground">{item.label}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-secondary/30 border-border">
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-base">Safety Performance</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="text-center p-4 bg-green-500/10 rounded-lg border border-green-500/30">
+                          <div className="text-4xl font-bold text-green-400">47</div>
+                          <div className="text-sm text-muted-foreground">Days Without Lost Time Incident</div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="p-3 bg-secondary/50 rounded-lg text-center">
+                            <div className="text-2xl font-bold">32</div>
+                            <div className="text-xs text-muted-foreground">Hazards Reported This Week</div>
+                          </div>
+                          <div className="p-3 bg-secondary/50 rounded-lg text-center">
+                            <div className="text-2xl font-bold">97%</div>
+                            <div className="text-xs text-muted-foreground">Resolved Within SLA</div>
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span>Hazard Reporting Rate</span>
+                            <span className="text-green-400">Excellent</span>
+                          </div>
+                          <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                            <div className="h-full bg-green-500 rounded-full" style={{ width: "92%" }} />
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            Staff are actively reporting hazards - 23% above industry average
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </TabsContent>
+
+                {/* Risk Assessments Tab */}
+                <TabsContent value="risk" className="space-y-4">
+                  <div className="grid md:grid-cols-3 gap-4 mb-6">
+                    <Card className="bg-green-500/10 border-green-500/30">
+                      <CardContent className="p-4 text-center">
+                        <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-green-400" />
+                        <div className="text-2xl font-bold text-green-400">18</div>
+                        <div className="text-xs text-muted-foreground">Current Assessments</div>
+                      </CardContent>
+                    </Card>
+                    <Card className="bg-amber-500/10 border-amber-500/30">
+                      <CardContent className="p-4 text-center">
+                        <Clock className="w-8 h-8 mx-auto mb-2 text-amber-400" />
+                        <div className="text-2xl font-bold text-amber-400">2</div>
+                        <div className="text-xs text-muted-foreground">Reviews Due</div>
+                      </CardContent>
+                    </Card>
+                    <Card className="bg-red-500/10 border-red-500/30">
+                      <CardContent className="p-4 text-center">
+                        <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-red-400" />
+                        <div className="text-2xl font-bold text-red-400">5</div>
+                        <div className="text-xs text-muted-foreground">High Risk Activities</div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <Card className="bg-secondary/30 border-border">
+                    <CardContent className="p-0">
+                      <div className="overflow-x-auto">
+                        <table className="w-full">
+                          <thead>
+                            <tr className="border-b border-border">
+                              <th className="text-left p-4 text-sm font-medium text-muted-foreground">Task/Activity</th>
+                              <th className="text-left p-4 text-sm font-medium text-muted-foreground">Risk Level</th>
+                              <th className="text-left p-4 text-sm font-medium text-muted-foreground">Last Review</th>
+                              <th className="text-left p-4 text-sm font-medium text-muted-foreground">Status</th>
+                              <th className="text-left p-4 text-sm font-medium text-muted-foreground">Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {riskAssessments.map((ra, i) => (
+                              <tr key={i} className="border-b border-border/50 hover:bg-secondary/20">
+                                <td className="p-4 font-medium">{ra.task}</td>
+                                <td className="p-4">
+                                  <Badge
+                                    className={
+                                      ra.riskLevel === "high"
+                                        ? "bg-red-500/20 text-red-400 border-red-500/30"
+                                        : ra.riskLevel === "medium"
+                                        ? "bg-amber-500/20 text-amber-400 border-amber-500/30"
+                                        : "bg-green-500/20 text-green-400 border-green-500/30"
+                                    }
+                                  >
+                                    {ra.riskLevel.charAt(0).toUpperCase() + ra.riskLevel.slice(1)}
+                                  </Badge>
+                                </td>
+                                <td className="p-4 text-muted-foreground">{ra.lastReview}</td>
+                                <td className="p-4">
+                                  <Badge
+                                    variant="outline"
+                                    className={
+                                      ra.status === "current"
+                                        ? "text-green-400 border-green-400/30"
+                                        : "text-amber-400 border-amber-400/30"
+                                    }
+                                  >
+                                    {ra.status === "current" ? "Current" : "Review Due"}
+                                  </Badge>
+                                </td>
+                                <td className="p-4">
+                                  <Button variant="ghost" size="sm">
+                                    View RA
+                                  </Button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-blue-500/10 border-blue-500/30">
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-3">
+                        <HardHat className="w-5 h-5 text-blue-400 mt-0.5" />
+                        <div>
+                          <div className="font-semibold text-blue-400 mb-1">AI Safety Recommendation</div>
+                          <p className="text-sm text-muted-foreground mb-3">
+                            Based on today&apos;s weather conditions and footfall predictions, the following additional controls are recommended:
+                          </p>
+                          <ul className="space-y-2 text-sm">
+                            <li className="flex items-center gap-2">
+                              <CheckCircle2 className="w-4 h-4 text-green-400" />
+                              Deploy additional wet floor signage near outdoor service areas
+                            </li>
+                            <li className="flex items-center gap-2">
+                              <CheckCircle2 className="w-4 h-4 text-green-400" />
+                              Increase glass collection frequency in high-traffic zones
+                            </li>
+                            <li className="flex items-center gap-2">
+                              <CheckCircle2 className="w-4 h-4 text-green-400" />
+                              Brief staff on sun exposure protocols for outdoor assignments
+                            </li>
+                          </ul>
+                          <div className="flex gap-2 mt-4">
+                            <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white">
+                              Implement All
+                            </Button>
+                            <Button size="sm" variant="outline" className="border-blue-500/30 text-blue-400">
+                              Customise
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
                     </CardContent>
                   </Card>
                 </TabsContent>
